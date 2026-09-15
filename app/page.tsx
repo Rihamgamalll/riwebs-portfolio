@@ -48,8 +48,12 @@ export default function Home(){
     gsap.registerPlugin(ScrollTrigger);
     const lenis=new Lenis({duration:1.0,smoothWheel:true});let id=0;const raf=(t:number)=>{lenis.raf(t);id=requestAnimationFrame(raf)};id=requestAnimationFrame(raf);
     const ctx=gsap.context(()=>{
-      gsap.utils.toArray<HTMLElement>('[data-rise]').forEach(el=>gsap.fromTo(el,{y:34,opacity:0},{y:0,opacity:1,duration:.9,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}}));
-      gsap.utils.toArray<HTMLElement>('[data-line]').forEach(el=>gsap.fromTo(el,{scaleX:.08},{scaleX:1,ease:'none',scrollTrigger:{trigger:el,start:'top 92%',end:'top 48%',scrub:true}}));
+      gsap.utils.toArray<HTMLElement>('[data-rise]').forEach((el,i)=>gsap.fromTo(el,{y:46,opacity:0,rotateX:7},{y:0,opacity:1,rotateX:0,duration:1.05,delay:(i%3)*.04,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 90%',once:true}}));
+      gsap.utils.toArray<HTMLElement>('[data-line]').forEach(el=>gsap.fromTo(el,{scaleX:.04},{scaleX:1,ease:'none',scrollTrigger:{trigger:el,start:'top 94%',end:'top 50%',scrub:true}}));
+      gsap.utils.toArray<HTMLElement>('[data-spin-scroll]').forEach((el,i)=>gsap.to(el,{rotation:i%2?280:-320,ease:'none',scrollTrigger:{trigger:el,start:'top bottom',end:'bottom top',scrub:1.2}}));
+      gsap.utils.toArray<HTMLElement>('[data-drift]').forEach((el,i)=>gsap.fromTo(el,{x:i%2?-70:70,y:30},{x:0,y:-18,ease:'none',scrollTrigger:{trigger:el,start:'top 92%',end:'bottom 20%',scrub:1}}));
+      gsap.utils.toArray<HTMLElement>('[data-tilt-scroll]').forEach((el,i)=>gsap.fromTo(el,{rotate:i%2?-4:4,scale:.965},{rotate:i%2?1.2:-1.2,scale:1,ease:'none',scrollTrigger:{trigger:el,start:'top 92%',end:'center 42%',scrub:1}}));
+      gsap.utils.toArray<HTMLElement>('.cap-step').forEach((el,i)=>gsap.fromTo(el,{y:38,opacity:0,rotate:i%2?-2:2},{y:0,opacity:1,rotate:0,duration:.75,delay:i*.06,ease:'back.out(1.4)',scrollTrigger:{trigger:'.cap-x__flow',start:'top 82%',once:true}}));
     },root);
     return()=>{cancelAnimationFrame(id);lenis.destroy();ctx.revert();ScrollTrigger.getAll().forEach(t=>t.kill())};
   },[]);
@@ -80,22 +84,23 @@ export default function Home(){
       <div className="hero-x__line" data-line/>
     </section>
 
-    <section className="belief-x">
-      <div className="section-tag"><span>02</span><p>{ar?'الفكرة قبل الشكل':'CONCEPT BEFORE DECORATION'}</p></div>
-      <div className="belief-x__grid">
-        <h2 data-rise>{ar?'الشكل الحلو لوحده مش كفاية. كل قرار لازم يخدم الفكرة.':'Pretty is not the brief. Every decision should serve the idea.'}</h2>
-        <div data-rise><p>{ar?'بنبدأ من السؤال الصح: مين هيستخدم التجربة؟ عايزينه يحس بإيه؟ وإيه أهم حاجة يعملها؟ من هنا بنختار الشكل، الحركة وطريقة التفاعل.':'We start with the right questions: who is this for, how should it feel, and what should people do next? That decides the visual language, motion and interaction.'}</p><div className="belief-x__notes"><span>01 — CLARITY</span><span>02 — CHARACTER</span><span>03 — INTERACTION</span></div></div>
+    <section className="kinetic-x" aria-label={ar?'طريقة RiWebs':'RiWebs approach'}>
+      <div className="kinetic-x__rings" aria-hidden="true"><i data-spin-scroll/><i data-spin-scroll/><i data-spin-scroll/></div>
+      <div className="section-tag"><span>02</span><p>{ar?'من الفكرة للتجربة':'FROM IDEA TO EXPERIENCE'}</p></div>
+      <div className="kinetic-x__statement" data-rise>
+        <span>{ar?'فكرة':'IDEA'}</span><b>→</b><span>{ar?'شكل':'SHAPE'}</span><b>→</b><span>{ar?'حركة':'MOTION'}</span><b>→</b><em>{ar?'تجربة':'EXPERIENCE'}</em>
       </div>
+      <p className="kinetic-x__note" data-drift>{ar?'كل حاجة لها سبب. مفيش حركة لمجرد الحركة.':'Every detail earns its place. Motion only when it adds meaning.'}</p>
     </section>
 
     <section className="build-x capability-atlas" id="capabilities">
       <div className="section-tag"><span>03</span><p>{ar?'بنقدر نبني إيه':'WHAT WE CAN BUILD'}</p></div>
       <div className="capability-atlas__intro">
-        <h2 data-rise>{ar?'اختاري اللي عايزة تعمليه. وإحنا ندي الفكرة شكلها الصح.':'Choose what you want to make. We’ll shape the right experience around it.'}</h2>
-        <p>{ar?'مش باكدجات محفوظة. دي نقطة بداية تخلّي العميل يفهم بسرعة إيه اللي ممكن نعمله، وبعدها كل مشروع بياخد اتجاهه الخاص.':'Not fixed packages. Just a clear starting point — every project gets its own visual language, interaction and build.'}</p>
+        <h2 data-rise>{ar?'اختاري الفكرة. وإحنا نديها شكلها.':'Pick the idea. We shape the experience.'}</h2>
+        <p>{ar?'كل مشروع له اتجاهه، مش قالب ثابت.':'No fixed packages. Every project gets its own direction.'}</p>
       </div>
 
-      <div className="capability-atlas__shell">
+      <div className="capability-atlas__shell" data-tilt-scroll>
         <div className="capability-atlas__nav" role="tablist" aria-label="RiWebs capabilities">
           {builds.map((b,i)=>{const active=activeBuild===i;return <button
             key={b.en}
@@ -157,10 +162,10 @@ export default function Home(){
     <section className="voices-x signal-x" id="testimonials">
       <div className="section-tag"><span>05</span><p>{ar?'بعد التسليم':'AFTER LAUNCH'}</p></div>
       <div className="signal-x__head">
-        <h2 data-rise>{ar?'الجزء اللي مبيتعملش له موكاب: رد الفعل الحقيقي.':'The part you cannot mock up: the reaction after launch.'}</h2>
-        <p>{ar?'بدل حائط تقييمات تقليدي، خلّينا الرسائل نفسها هي العنصر الأساسي. اختاري الاسم وشوفي الرسالة زي ما وصلت.':'Instead of a testimonial wall, the message itself becomes the experience. Pick a name and let the reaction take the screen.'}</p>
+        <h2 data-rise>{ar?'أحلى جزء؟ رد الفعل بعد التسليم.':'The best part? The message after launch.'}</h2>
+        
       </div>
-      <div className="signal-x__stage">
+      <div className="signal-x__stage" data-tilt-scroll>
         <div className="signal-x__selector" role="tablist" aria-label="Client reactions">
           {testimonials.map((t,i)=><button key={t.nameEn} onClick={()=>setActiveTestimonial(i)} className={activeTestimonial===i?'active':''}>
             <span>{String(i+1).padStart(2,'0')}</span>
@@ -186,7 +191,7 @@ export default function Home(){
     <section className="cap-x">
 
       <div className="section-tag light"><span>06</span><p>{ar?'الطريقة':'HOW IT MOVES'}</p></div>
-      <div className="cap-x__headline"><h2>{ar?'أقل خطوات. قرارات أذكى.':'Less ceremony. Better decisions.'}</h2><p>{ar?'كل مرحلة لها هدف واضح، عشان نتحرك بسرعة من غير ما النتيجة تبان مستعجلة.':'Every phase has one job, so we move quickly without making the work feel rushed.'}</p></div>
+      <div className="cap-x__headline"><h2>{ar?'من سطر للّينك.':'From one line to live.'}</h2></div>
       <div className="cap-x__flow">{[
         [ar?'نتكلم':'Talk',ar?'الفكرة والهدف':'idea + goal'],
         [ar?'نشكّل':'Shape',ar?'اتجاه وهوية':'direction + identity'],
@@ -198,7 +203,7 @@ export default function Home(){
 
     <section className="contact-x" id="contact">
       <div className="section-tag"><span>07</span><p>{ar?'ابدأ من سطر':'START WITH ONE LINE'}</p></div>
-      <div className="contact-x__grid"><h2>{ar?'عندك فكرة؟ ابعتها زي ما هي.':'Have an idea? Send it exactly as it is.'}</h2><div><p>{ar?'مش محتاج Proposal ولا Brief جاهز. اختار سؤال بداية، افتح إنستجرام، ونكمّل من هناك.':'No polished brief needed. Pick a starting question, open Instagram, and we will take it from there.'}</p><div className="contact-x__actions"><a href="/contact">{ar?'افتح صفحة التواصل':'Open contact page'}<ArrowUpRight/></a><button type="button" onClick={startInstagram}>{ar?'ابدأ على إنستجرام':'Start on Instagram'}<MessageCircle size={18}/></button></div></div></div>
+      <div className="contact-x__orbit" aria-hidden="true"><i data-spin-scroll/><i data-spin-scroll/></div><div className="contact-x__grid" data-rise><h2>{ar?'عندك فكرة؟ ابعتها زي ما هي.':'Have an idea? Send it exactly as it is.'}</h2><div><p>{ar?'ابعت الفكرة زي ما هي، ونكمّل سوا.':'Send the idea as it is. We’ll shape it together.'}</p><div className="contact-x__actions"><a href="/contact">{ar?'افتح صفحة التواصل':'Open contact page'}<ArrowUpRight/></a><button type="button" onClick={startInstagram}>{ar?'ابدأ على إنستجرام':'Start on Instagram'}<MessageCircle size={18}/></button></div></div></div>
     </section>
 
     <footer className="footer-x">
