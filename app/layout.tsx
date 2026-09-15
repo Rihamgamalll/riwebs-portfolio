@@ -2,7 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
-export const metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL('https://portfolio-riwebs.vercel.app'),
 
   title: 'RiWebs — Digital Experiences Built From Ideas',
@@ -30,4 +30,22 @@ export const metadata = {
     description: 'Websites, apps, links and interactive experiences.',
     images: ['/og-home-light.png'],
   },
+
+  icons: {
+    icon: '/images/riwebs-logo.png',
+    shortcut: '/images/riwebs-logo.png',
+    apple: '/images/riwebs-logo.png',
+  },
 };
+
+export default function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
