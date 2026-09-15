@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { ArrowDownRight, ArrowUpRight, Check, Copy, MessageCircle, Quote, X } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, MessageCircle, Quote } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Lenis from 'lenis';
 import gsap from 'gsap';
@@ -10,8 +10,8 @@ import Navbar from '@/components/Navbar';
 import ProjectShowcase from '@/components/ProjectShowcase';
 import type { Lang } from '@/data/projects';
 import { SocialIcon } from '@/components/SocialIcon';
+import QuickStartModal from '@/components/QuickStartModal';
 
-const IG_DM='https://ig.me/m/riweb_s';
 
 const testimonials=[
   {nameEn:'Mariam',nameAr:'مريم',projectEn:'Personal gift experience',projectAr:'تجربة هدية شخصية',time:'11:42 PM',quoteEn:'I am sooo happy with it 😭 Thank you so much Riham You genuinely surprised me this is the best thing to open and find How are you this good at this',quoteAr:'أنا مبسوطة بيه أوي أوي 😭 شكرا بجد يا ريهام فاجئتيني دي أحلى حاجة الواحد يفتح عليها إيه الشطاره دي كلها؟'},
@@ -33,30 +33,14 @@ export default function Home(){
   const [loading,setLoading]=useState(true);
   const [activeBuild,setActiveBuild]=useState(0);
   const [langFlash,setLangFlash]=useState(false);
-  const [dmOpen,setDmOpen]=useState(false);
-  const [copiedPrompt,setCopiedPrompt]=useState<number|null>(null);
   const [activeTestimonial,setActiveTestimonial]=useState(0);
+  const [quickStartOpen,setQuickStartOpen]=useState(false);
   const root=useRef<HTMLElement>(null);
   const ar=lang==='ar';
   const setLanguage=(l:Lang)=>{if(l===lang)return;setLangFlash(true);setTimeout(()=>setLang(l),170);setTimeout(()=>setLangFlash(false),520)};
 
-  const dmPrompts=ar?[
-    'عايز/ة أعمل Website لبراند، إيه المعلومات اللي محتاجينها مني؟',
-    'ممكن أعرف متوسط التكلفة والمدة المتوقعة للموقع؟',
-    'عندي فكرة ومش عارف/ة الأنسب ليها Website ولا App ولا Link.',
-    'محتاج/ة Landing Page لخدمة أو منتج، نبدأ إزاي؟',
-    'عايز/ة Invitation أو Gift Link بفكرة مختلفة.',
-    'عندي Website حالي وعايز/ة Redesign كامل.'
-  ]:[
-    'I want a website for my brand. What do you need from me to start?',
-    'What is the typical budget range and timeline for a website?',
-    'I have an idea but I am not sure if it should be a website, app or link.',
-    'I need a landing page for a product or service. How do we start?',
-    'I want a creative invitation or digital gift link.',
-    'I already have a website and want a complete redesign.'
-  ];
-  const startInstagram=()=>setDmOpen(true);
-  const choosePrompt=async(text:string,index:number)=>{try{await navigator.clipboard.writeText(text)}catch{}setCopiedPrompt(index)};
+  const startInstagram=()=>setQuickStartOpen(true);
+
 
   useEffect(()=>{const t=setTimeout(()=>setLoading(false),520);return()=>clearTimeout(t)},[]);
   useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=ar?'rtl':'ltr';document.documentElement.dataset.theme=theme},[lang,ar,theme]);
@@ -228,6 +212,6 @@ export default function Home(){
       <div className="footer-x__end"><span>© 2026 RIWEBS</span><span>{ar?'DESIGN • DEVELOPMENT • INTERACTION':'DESIGN • DEVELOPMENT • INTERACTION'}</span><span>{ar?'Built with intention.':'Built with intention.'}</span></div>
     </footer>
 
-    <AnimatePresence>{dmOpen&&<motion.div className="dm-layer" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onMouseDown={(e)=>{if(e.target===e.currentTarget)setDmOpen(false)}}><motion.div className="dm-panel" initial={{y:24,opacity:0,scale:.985}} animate={{y:0,opacity:1,scale:1}} exit={{y:16,opacity:0,scale:.985}} transition={{duration:.25,ease:[.22,1,.36,1]}}><button className="dm-close" onClick={()=>setDmOpen(false)} aria-label="Close"><X size={20}/></button><div className="dm-kicker"><span className="dm-dot"/> {ar?'ابدأ من هنا':'START HERE'}</div><h3>{ar?'اختار سؤال بداية.':'Pick the question closest to what you need.'}</h3><p>{ar?'هننسخه تلقائيًا، وبعدها افتح إنستجرام والصقه في الشات.':'We will copy it for you. Then open Instagram and paste it into the chat.'}</p><div className="dm-prompts">{dmPrompts.map((prompt,i)=><button key={prompt} onClick={()=>choosePrompt(prompt,i)} className={copiedPrompt===i?'copied':''}><span>{prompt}</span>{copiedPrompt===i?<Check size={18}/>:<Copy size={18}/>}</button>)}</div><div className="dm-actions"><span>{copiedPrompt===null?(ar?'اختار سؤال الأول':'Choose a question first'):(ar?'اتنسخ ✓':'Copied ✓')}</span><a href={IG_DM} target="_blank" rel="noreferrer" className={copiedPrompt===null?'disabled':''}>{ar?'افتح إنستجرام':'Open Instagram'}<ArrowUpRight size={17}/></a></div></motion.div></motion.div>}</AnimatePresence>
+  <QuickStartModal open={quickStartOpen} onClose={()=>setQuickStartOpen(false)} lang={lang}/>
   </main>
 }
