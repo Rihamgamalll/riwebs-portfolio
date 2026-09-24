@@ -66,7 +66,22 @@ export const projects: Project[] = [
       en: 'A personal message transformed into a digital gift — an example of how a moment, memory or note can become an interactive experience.',
       ar: 'رسالة شخصية اتحولت لهدية رقمية؛ مثال على إن مناسبة أو ذكرى أو كلمة ممكن تتحول لتجربة Digital كاملة.'
     }
+  },
+  {
+    id: 'bloom',
+    number: '07',
+    name: 'BLOOM',
+    image: '/images/projects/bloom.png',
+    url: 'https://bloom-boutique-git-main-ri-webs.vercel.app/',
+    categories: ['Business', 'Brand', 'Creative'],
+    tone: 'blush',
+    type: {
+      en: 'Floral Boutique / Brand Website',
+      ar: 'موقع براند زهور وبوكيهات'
+    },
+    description: {
+      en: 'A soft editorial floral experience combining elegant storytelling, product presentation and a warm boutique atmosphere.',
+      ar: 'تجربة Floral هادية وراقية بتجمع بين عرض البوكيهات، تفاصيل البراند، وإحساس Boutique دافي ومميز.'
+    }
   }
-];
-
-export const categories = ['All', 'Business', 'Brand', 'Restaurant', 'Fashion', 'Personal', 'Celebration', 'Surprise', 'Creative', 'Interactive'];
+  ];
